@@ -10,15 +10,13 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import java.awt.DisplayMode;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 
 import com.jogamp.opengl.util.FPSAnimator;
-import com.jogamp.opengl.util.gl2.GLUT;
-import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
+import com.jogamp.opengl.util.awt.TextRenderer;
 import java.awt.AWTException;
 import java.awt.Font;
 import java.io.InputStream;
@@ -49,11 +47,13 @@ public class CowboyPyroFPS implements GLEventListener {
             gl.glTranslatef(3f, 0f, 0f);
             Wall.render(gl);
         }
-TextRenderer textr = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18));
-textr.setColor(Color.GREEN);
-textr.begin3DRendering();
-textr.draw3D("ERRORS", xLocation, yLocation, zLocation, scale);
-textr.end3DRendering();
+        
+        TextRenderer textr = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18));
+        textr.beginRendering(400, 400);
+        textr.setColor(1.0f, 0.2f, 0.2f, 0.8f);
+        textr.draw("Test", 10, 10);
+        textr.endRendering();
+        
         Command.render(gl);
         gl.glFlush();
     }
