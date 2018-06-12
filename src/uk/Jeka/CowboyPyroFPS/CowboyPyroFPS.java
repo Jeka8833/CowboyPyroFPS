@@ -16,10 +16,9 @@ import javax.swing.JFrame;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.TextureIO;
-import com.jogamp.opengl.util.awt.TextRenderer;
 import java.awt.AWTException;
-import java.awt.Font;
 import java.io.InputStream;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.Jeka.CowboyPyroFPS.Listeners.Keyboard;
@@ -34,28 +33,29 @@ public class CowboyPyroFPS implements GLEventListener {
     public static JFrame frame;
     GLU glu = new GLU();
     private int texture;
+    private static Scanner scanner = new Scanner(System.in);
 
     @Override
     public void display(GLAutoDrawable drawable) {
         final GL2 gl = drawable.getGL().getGL2();
+        gl.glEnable(GL2.GL_BLEND);
+        gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glColor4f(1f, 1f, 1f, 1f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        gl.glColor4d(1f, 1f, 1f, 1f);
-        gl.glLoadIdentity(); // Reset The View
+        gl.glLoadIdentity();
         MoveAndCam.render(glu);
         gl.glBindTexture(GL2.GL_TEXTURE_2D, texture);
         for (int i = 0; i < 5; i++) {
             gl.glTranslatef(3f, 0f, 0f);
             Wall.render(gl);
         }
-        
-        TextRenderer textr = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18));
-        textr.beginRendering(400, 400);
-        textr.setColor(1.0f, 0.2f, 0.2f, 0.8f);
-        textr.draw("Test", 10, 10);
-        textr.endRendering();
-        
-        Command.render(gl);
+        gl.glDisable(GL2.GL_BLEND);
         gl.glFlush();
+    }
+    
+    public static void readConsole(){
+         String input = scanner.nextLine();
+         System.out.println(input);
     }
 
     @Override
