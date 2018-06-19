@@ -7,7 +7,7 @@ import java.awt.PointerInfo;
 import java.awt.Robot;
 import javax.swing.JFrame;
 
-public class MoveAndCam {
+public class MoveAndCam{
 
     private static Robot robot;
     private static JFrame frame;

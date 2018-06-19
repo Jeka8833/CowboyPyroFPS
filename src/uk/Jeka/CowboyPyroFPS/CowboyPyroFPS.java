@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import uk.Jeka.CowboyPyroFPS.Listeners.Keyboard;
 import uk.Jeka.CowboyPyroFPS.Listeners.MouseMove;
 import uk.Jeka.CowboyPyroFPS.Player.MoveAndCam;
-import uk.Jeka.CowboyPyroFPS.render.Command;
+import uk.Jeka.CowboyPyroFPS.render.Info;
 import uk.Jeka.CowboyPyroFPS.render.Wall;
 
 public class CowboyPyroFPS implements GLEventListener {
@@ -45,17 +45,16 @@ public class CowboyPyroFPS implements GLEventListener {
         gl.glLoadIdentity();
         MoveAndCam.render(glu);
         gl.glBindTexture(GL2.GL_TEXTURE_2D, texture);
-        for (int i = 0; i < 5; i++) {
-            gl.glTranslatef(3f, 0f, 0f);
-            Wall.render(gl);
+        for (int i = 0; i < 10; i++) {
+            for (int r = 0; r < 10; r++) {
+                gl.glTranslatef(3f, 0f, 0f);
+                Wall.render(gl);
+            }
+            gl.glTranslatef(-30f, 0f, 3f);
         }
+        Info.render();
         gl.glDisable(GL2.GL_BLEND);
         gl.glFlush();
-    }
-    
-    public static void readConsole(){
-         String input = scanner.nextLine();
-         System.out.println(input);
     }
 
     @Override
@@ -87,7 +86,7 @@ public class CowboyPyroFPS implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, (float) width / (float) height, 1.0, 20.0);
+        glu.gluPerspective(45.0f, (float) width / (float) height, 1.0, 200.0);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
     }
@@ -104,5 +103,6 @@ public class CowboyPyroFPS implements GLEventListener {
         frame.setVisible(true);
         new FPSAnimator(glcanvas, 300, true).start();
         new MoveAndCam(frame);
+        Info.begin();
     }
 }
