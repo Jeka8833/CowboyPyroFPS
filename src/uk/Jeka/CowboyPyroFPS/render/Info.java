@@ -8,14 +8,13 @@ import uk.Jeka.CowboyPyroFPS.Utils.Setting;
 
 public class Info {
 
-    private static boolean isAdmin;
     private static final TextRenderer textr = new TextRenderer(new Font("SansSerif", Font.BOLD, 15));
     private static long last = 0;
     private static int tick = 0;
     private static int fps;
 
     public static void render() {
-        if (isAdmin) {
+        if (Setting.isIsAdmin()) {
             long time = System.currentTimeMillis();
             tick++;
             if (time - last > 1000) {
@@ -24,21 +23,17 @@ public class Info {
                 tick = 0;
             }
 
-            final int Width = CowboyPyroFPS.frame.getWidth();
-            final int Height = CowboyPyroFPS.frame.getHeight();
+            final int Width = CowboyPyroFPS.getFrame().getWidth();
+            final int Height = CowboyPyroFPS.getFrame().getHeight();
 
             textr.beginRendering(Width, Height);
             textr.setColor(1, 1, 1, 1);
 
             textr.draw("FPS: " + fps, 2, 33);
-            textr.draw("Pith: " + MoveAndCam.pith + " Yaw: " + MoveAndCam.yaw, 2, 17);
-            textr.draw("X: " + MoveAndCam.x + " Y: " + MoveAndCam.y + " Z " + MoveAndCam.z, 2, 2);
+            textr.draw("Pith: " + MoveAndCam.getPith() + " Yaw: " + MoveAndCam.getYaw(), 2, 17);
+            textr.draw("X: " + MoveAndCam.getX() + " Y: " + MoveAndCam.getY() + " Z " + MoveAndCam.getZ(), 2, 2);
 
             textr.endRendering();
         }
-    }
-
-    public static void begin() {
-        isAdmin = new Setting().isAdmin();
     }
 }

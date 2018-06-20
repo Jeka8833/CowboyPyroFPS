@@ -2,24 +2,25 @@ package uk.Jeka.CowboyPyroFPS.Player;
 
 import com.jogamp.opengl.glu.GLU;
 import java.awt.AWTException;
-import java.awt.MouseInfo;
-import java.awt.PointerInfo;
 import java.awt.Robot;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
+import uk.Jeka.CowboyPyroFPS.Utils.Setting;
 
-public class MoveAndCam{
+public class MoveAndCam {
 
     private static Robot robot;
     private static JFrame frame;
 
-    public static float x = 0f;
-    public static float y = 0f;
-    public static float z = 0f;
+    private static float x = 0f;
+    private static float y = 0f;
+    private static float z = 0f;
 
     private static float rotationX = 0f;
     private static float rotationY = 0f;
-    public static float pith = 0f;
-    public static float yaw = 0f;
+    private static float pith = 0f;
+    private static float yaw = 0f;
 
     private static boolean keyW = false;
     private static boolean keyA = false;
@@ -37,11 +38,15 @@ public class MoveAndCam{
     private static boolean correction = true;
     private static int correctionX = 0;
     private static int correctionY = 0;
-
-    public MoveAndCam(JFrame frame) throws AWTException {
-        robot = new Robot();
-        this.frame = frame;
-        robot.mouseMove(frame.getLocation().x + frame.getWidth() / 2, frame.getLocation().y + frame.getHeight() / 2);
+    
+    public static void begin(final JFrame frame){
+        MoveAndCam.frame = frame;
+        try {
+            robot = new Robot();
+            robot.mouseMove(frame.getLocation().x + frame.getWidth() / 2, frame.getLocation().y + frame.getHeight() / 2);
+        } catch (AWTException ex) {
+            Logger.getLogger(MoveAndCam.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void render(GLU glu) {
@@ -50,38 +55,37 @@ public class MoveAndCam{
         last_time = time;
 
         float deltaTimeMove = deltaTime / MoveSpeed;
-        float rightABC = pith - 3.14f / 2;
+        float rightABC = getPith() - 3.14f / 2;
         float rightX = (float) Math.sin(rightABC);
         float rightZ = (float) Math.cos(rightABC);
-        float cosVer = (float) Math.cos(yaw);
+        float cosVer = (float) Math.cos(getYaw());
         if (keyD) {
-            x += rightX * deltaTimeMove;
-            z += rightZ * deltaTimeMove;
+            setX(getX() + rightX * deltaTimeMove);
+            setZ(getZ() + rightZ * deltaTimeMove);
         }
         if (keyA) {
-            x -= rightX * deltaTimeMove;
-            z -= rightZ * deltaTimeMove;
+            setX(getX() - rightX * deltaTimeMove);
+            setZ(getZ() - rightZ * deltaTimeMove);
         }
         if (keyW) {
-            x += rightZ * deltaTimeMove;
-            z += -rightX * deltaTimeMove;
+            setX(getX() + rightZ * deltaTimeMove);
+            setZ(getZ() + -rightX * deltaTimeMove);
         }
         if (keyS) {
-            x -= rightZ * deltaTimeMove;
-            z -= -rightX * deltaTimeMove;
+            setX(getX() - rightZ * deltaTimeMove);
+            setZ(getZ() - -rightX * deltaTimeMove);
         }
-        if (keySpase) {
-            y += deltaTimeMove;
+        if (Setting.isIsAdmin() && keySpase) {
+            setY(getY() + deltaTimeMove);
         }
-        if (keyShift) {
-            y -= deltaTimeMove;
+        if (Setting.isIsAdmin() && keyShift) {
+            setY(getY() - deltaTimeMove);
         }
         //System.out.println(x + " " + y + " " + z + " " + pith + " " + yaw);
-        glu.gluLookAt(
-                x, y, z,
-                x + cosVer * Math.sin(pith),
-                y + Math.sin(yaw),
-                z + cosVer * Math.cos(pith),
+        glu.gluLookAt(getX(), getY(), getZ(),
+                getX() + cosVer * Math.sin(getPith()),
+                getY() + Math.sin(getYaw()),
+                getZ() + cosVer * Math.cos(getPith()),
                 0, 1, 0
         );
     }
@@ -169,9 +173,79 @@ public class MoveAndCam{
             if (rotationY < -90) {
                 rotationY = -89.9f;
             }
-            pith = (float) Math.toRadians(rotationX);
-            yaw = (float) Math.toRadians(rotationY);
+            setPith((float) Math.toRadians(rotationX));
+            setYaw((float) Math.toRadians(rotationY));
             robot.mouseMove(frame.getLocation().x + frame.getWidth() / 2, frame.getLocation().y + frame.getHeight() / 2);
         }
+    }
+
+    /**
+     * @return the x
+     */
+    public static float getX() {
+        return x;
+    }
+
+    /**
+     * @param aX the x to set
+     */
+    public static void setX(float aX) {
+        x = aX;
+    }
+
+    /**
+     * @return the y
+     */
+    public static float getY() {
+        return y;
+    }
+
+    /**
+     * @param aY the y to set
+     */
+    public static void setY(float aY) {
+        y = aY;
+    }
+
+    /**
+     * @return the z
+     */
+    public static float getZ() {
+        return z;
+    }
+
+    /**
+     * @param aZ the z to set
+     */
+    public static void setZ(float aZ) {
+        z = aZ;
+    }
+
+    /**
+     * @return the pith
+     */
+    public static float getPith() {
+        return pith;
+    }
+
+    /**
+     * @param aPith the pith to set
+     */
+    public static void setPith(float aPith) {
+        pith = aPith;
+    }
+
+    /**
+     * @return the yaw
+     */
+    public static float getYaw() {
+        return yaw;
+    }
+
+    /**
+     * @param aYaw the yaw to set
+     */
+    public static void setYaw(float aYaw) {
+        yaw = aYaw;
     }
 }

@@ -8,32 +8,49 @@ import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
-import java.awt.DisplayMode;
-
-import java.io.IOException;
-
-import javax.swing.JFrame;
-
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.TextureIO;
-import java.awt.AWTException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import uk.Jeka.CowboyPyroFPS.Listeners.Keyboard;
 import uk.Jeka.CowboyPyroFPS.Listeners.MouseMove;
 import uk.Jeka.CowboyPyroFPS.Player.MoveAndCam;
+import uk.Jeka.CowboyPyroFPS.Utils.Setting;
 import uk.Jeka.CowboyPyroFPS.render.Info;
 import uk.Jeka.CowboyPyroFPS.render.Wall;
 
 public class CowboyPyroFPS implements GLEventListener {
 
-    public static DisplayMode dm, dm_old;
-    public static JFrame frame;
-    GLU glu = new GLU();
+    private static JFrame frame;
+
+    private static final GLU glu = new GLU();
+
+    public static void main(String[] args) {
+        Setting.read();
+        final GLCanvas glcanvas = new GLCanvas(new GLCapabilities(GLProfile.get(GLProfile.GL2)));
+        frame = new JFrame("Cowboy Pyro FPS");
+        glcanvas.addGLEventListener(new CowboyPyroFPS());
+        glcanvas.setSize(400, 400);
+        glcanvas.addKeyListener(new Keyboard());
+        glcanvas.addMouseMotionListener(new MouseMove());
+        getFrame().getContentPane().add(glcanvas);
+        getFrame().setSize(glcanvas.getSize());
+        getFrame().setVisible(true);
+        new FPSAnimator(glcanvas, 300, true).start();
+        MoveAndCam.begin(getFrame());
+    }
+
+    /**
+     * @return the frame
+     */
+    public static JFrame getFrame() {
+        return frame;
+    }
+
     private int texture;
-    private static Scanner scanner = new Scanner(System.in);
 
     @Override
     public void display(GLAutoDrawable drawable) {
@@ -70,7 +87,6 @@ public class CowboyPyroFPS implements GLEventListener {
         gl.glEnable(GL2.GL_DEPTH_TEST);
         gl.glDepthFunc(GL2.GL_LEQUAL);
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
-        //gl.glDisable(GL2.GL_DEPTH_TEST);
         gl.glEnable(GL2.GL_TEXTURE_2D);
         InputStream is = CowboyPyroFPS.class.getResourceAsStream("Image/box.png");
         try {
@@ -86,23 +102,9 @@ public class CowboyPyroFPS implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, (float) width / (float) height, 1.0, 200.0);
+        glu.gluPerspective(45.0f, width / (float) height, 1.0, Setting.getDistance());
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
     }
 
-    public static void main(String[] args) throws AWTException {
-        final GLCanvas glcanvas = new GLCanvas(new GLCapabilities(GLProfile.get(GLProfile.GL2)));
-        frame = new JFrame("Cowboy Pyro FPS");
-        glcanvas.addGLEventListener(new CowboyPyroFPS());
-        glcanvas.setSize(400, 400);
-        glcanvas.addKeyListener(new Keyboard());
-        glcanvas.addMouseMotionListener(new MouseMove());
-        frame.getContentPane().add(glcanvas);
-        frame.setSize(glcanvas.getSize());
-        frame.setVisible(true);
-        new FPSAnimator(glcanvas, 300, true).start();
-        new MoveAndCam(frame);
-        Info.begin();
-    }
 }
