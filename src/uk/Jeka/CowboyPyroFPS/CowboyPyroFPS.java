@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import uk.Jeka.CowboyPyroFPS.Listeners.Keyboard;
 import uk.Jeka.CowboyPyroFPS.Listeners.MouseMove;
+import uk.Jeka.CowboyPyroFPS.Map.MapDecompiler;
 import uk.Jeka.CowboyPyroFPS.Player.MoveAndCam;
 import uk.Jeka.CowboyPyroFPS.Utils.Setting;
 import uk.Jeka.CowboyPyroFPS.render.Info;
@@ -41,6 +42,8 @@ public class CowboyPyroFPS implements GLEventListener {
         getFrame().setVisible(true);
         new FPSAnimator(glcanvas, 300, true).start();
         MoveAndCam.begin(getFrame());
+        MapDecompiler.Convert();
+        MapDecompiler.Decompile();
     }
 
     /**
@@ -88,7 +91,7 @@ public class CowboyPyroFPS implements GLEventListener {
         gl.glDepthFunc(GL2.GL_LEQUAL);
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
         gl.glEnable(GL2.GL_TEXTURE_2D);
-        InputStream is = CowboyPyroFPS.class.getResourceAsStream("Image/box.png");
+        InputStream is = CowboyPyroFPS.class.getResourceAsStream("Image/2.png");
         try {
             texture = TextureIO.newTexture(is, false, "png").getTextureObject(gl);
         } catch (IOException | GLException ex) {
