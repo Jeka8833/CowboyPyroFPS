@@ -1,15 +1,17 @@
 package uk.Jeka.CowboyPyroFPS.Map;
 
+import uk.Jeka.CowboyPyroFPS.render.Wall;
+
 public class Chunk {
 
-    private final byte Wall;
+    private final Wall Wall;
     private final byte Entity;
     private final byte Item;
     private final byte Object;
     private final byte Top;
     private final byte Bottom;
 
-    public Chunk(final byte Wall, final byte Entity, final byte Item, final byte Object, final byte Top, final byte Bottom) {
+    public Chunk(final Wall Wall, final byte Entity, final byte Item, final byte Object, final byte Top, final byte Bottom) {
         this.Entity = Entity;
         this.Item = Item;
         this.Object = Object;
@@ -18,7 +20,25 @@ public class Chunk {
         this.Bottom = Bottom;
     }
 
-    public byte getWall() {
+    public Chunk(final byte Entity, final byte Item, final byte Object, final byte Top, final byte Bottom) {
+        this.Entity = Entity;
+        this.Item = Item;
+        this.Object = Object;
+        this.Top = Top;
+        this.Bottom = Bottom;
+        this.Wall = new Wall((byte) 0, (byte) 0, (byte) 0, (byte) 0);
+    }
+
+    public Chunk(final Wall Wall) {
+        this.Wall = Wall;
+        this.Entity = (byte) 0;
+        this.Item = (byte) 0;
+        this.Object = (byte) 0;
+        this.Top = (byte) 0;
+        this.Bottom = (byte) 0;
+    }
+
+    public Wall getWall() {
         return Wall;
     }
 
@@ -40,5 +60,10 @@ public class Chunk {
 
     public byte getBottom() {
         return Bottom;
+    }
+
+    @Override
+    public String toString() {
+        return Wall + " " + Entity + " " + Item + " " + Object + " " + Top + " " + Bottom;
     }
 }
